@@ -1,8 +1,11 @@
 
 
-#include "Hardware.h"
+
 #include <plib.h>
 
+#include "Hardware.h"
+#include "FIFOI2C.h"
+#include "HMC5883L.h"
 
 // <editor-fold defaultstate="collapsed" desc="Config Bits">
 /*CP: Code-Protect bit
@@ -120,16 +123,7 @@
 
 
 
-// EEPROM Constants
-#define EEPROM_I2C_BUS              I2C2
-#define EEPROM_ADDRESS              0x50        // 0b1010000 Serial EEPROM address
 
-
-#define MY_SLAVE_ADDRESS            0x15
-#define DEVICE_SELECTION            I2C2
-
-
-#include "FIFOI2C.h"
 
 void DelayTime(int ms)
 {
@@ -146,35 +140,22 @@ void DelayTime(int ms)
 //Pulse Gobbler Delay
 int main(void)
 {
-    int i = 0;
-    FIFOI2C_RX_Byte a, b, c;
-    uint8 bty[10];
-    
+
     //Configures system for optimum preformance without changing PB divider
     SYSTEMConfig(GetSystemClock(), SYS_CFG_PCACHE | SYS_CFG_WAIT_STATES);
 
     FIFOI2C_initialize();
-//    FIFOI2C_addQueue_readDeviceRegisters(0, 0x00, 2);
-//    FIFOI2C_addQueue_readDeviceRegisters(1, 0x00, 1);
 
-
-
-    // Enable multi-vector interrupts
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
     INTEnableInterrupts();
 
-    bty[0] = 0x70;
-    bty[1] = 0xA0;
-    bty[2] = 0x00;
+    HMC5883L_startMeasurements();
 
     while(1)
     {
-        FIFOI2C_addQueue_writeDeviceRegisters(0, 0x00, bty, 3);
-        FIFOI2C_addQueue_readDeviceRegisters(0, 0x00, 3);
+        HMC5883L_interpretXZY();
+        HMC5883L_queueReadXZY();
         DelayTime(100);
-        a = FIFOI2C_readQueue(0);
-        b = FIFOI2C_readQueue(0);
-        c = FIFOI2C_readQueue(0);
     }
 
 

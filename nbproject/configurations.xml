@@ -13,9 +13,11 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Main_FIFOI2C.c</itemPath>
+      <itemPath>Hardware.h</itemPath>
+      <itemPath>HMC5883L.c</itemPath>
+      <itemPath>HMC5883L.h</itemPath>
       <itemPath>FIFOI2C.h</itemPath>
       <itemPath>FIFIOI2C.c</itemPath>
-      <itemPath>Hardware.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
