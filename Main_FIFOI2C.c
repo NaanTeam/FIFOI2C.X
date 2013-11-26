@@ -122,9 +122,6 @@
 
 
 
-
-
-
 void DelayTime(int ms)
 {
     int i = 0;
@@ -150,12 +147,22 @@ int main(void)
     INTEnableInterrupts();
 
     HMC5883L_startMeasurements();
-
+    //DelayTime(1000);
+    int i = 0;
     while(1)
     {
-        HMC5883L_interpretXZY();
-        HMC5883L_queueReadXZY();
-        DelayTime(100);
+        //My thoughts are that startMeasurements isn't actually being called.
+        i = 0;
+        //HMC5883L_startMeasurements();
+        while (i < 25)
+        {
+            HMC5883L_interpretXZY();
+            HMC5883L_queueReadXZY();
+            DelayTime(200);
+            i++;
+        }
+        
+        
     }
 
 

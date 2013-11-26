@@ -340,9 +340,8 @@ uint8 FIFOI2C_addQueue_writeDeviceRegisters(uint16 device, uint8 start_register,
     uint8 send_byte_buffer[FIFOI2C_TRANSMIT_BUFFER_SIZE];
     FIFOI2C_Device_Commands state_buffer[FIFOI2C_TRANSMIT_BUFFER_SIZE];
 
-    if ((FIFOI2C_Devices_List[device].transmit_buffer_length + buffer_length) >= (FIFOI2C_TRANSMIT_BUFFER_SIZE - 1))
+    if ((FIFOI2C_Devices_List[device].transmit_buffer_length + buffer_length) <= (FIFOI2C_TRANSMIT_BUFFER_SIZE - 1))
     {
-    }
 
     //Start
     state_buffer[ind] = FIFOI2C_DEVICE_COMMAND_START; //Start it
@@ -383,6 +382,11 @@ uint8 FIFOI2C_addQueue_writeDeviceRegisters(uint16 device, uint8 start_register,
 
 
     FIFOI2C_addQueue(device, send_byte_buffer, state_buffer, ind);
+    }
+    else
+    {
+        return -1;
+    }
 }
 
 
